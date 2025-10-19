@@ -28,13 +28,13 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t backend-stg ../apps/backend
+          docker build -t backend-stg ./apps/backend
           docker tag backend-stg:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-stg:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-stg:latest
 
       - name: Build and push frontend image
         run: |
-          docker build -t frontend-stg ../apps/frontend
+          docker build -t frontend-stg ./apps/frontend
           docker tag frontend-stg:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-stg:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend-stg:latest
 
