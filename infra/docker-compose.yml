@@ -1,29 +1,39 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:15
+    container_name: todo-db
+    restart: always
     environment:
-      POSTGRES_USER: todo
-      POSTGRES_PASSWORD: todopass
-      POSTGRES_DB: todos_dev
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
   backend:
     build: ../apps/backend
+    container_name: todo-backend
+    restart: always
     environment:
-      DATABASE_URL: postgres://todo:todopass@db:5432/todos_dev
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+      PORT: ${BACKEND_PORT}
     ports:
-      - "3001:3001"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
       - db
 
   frontend:
     build: ../apps/frontend
+    container_name: todo-frontend
+    restart: always
+    environment:
+      REACT_APP_API_URL: "http://localhost:${BACKEND_PORT}"
     ports:
-      - "3000:80"
+      - "${FRONTEND_PORT}:80"
     depends_on:
       - backend
 
